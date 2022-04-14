@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Document</title>
+</head>
+
+<body>
+    <script src="RequiredFiles/three.min.js"></script>
+    <script src="RequiredFiles/OrbitControls.js"></script>
+    <script src="RequiredFiles/dat.gui.min.js"></script>
+    <script>
+        var scene = new THREE.Scene();
+        var renderer = new THREE.WebGLRenderer({
+            antialias: true
+        });
+        renderer.setClearColor("pink", 1.0);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        var cubeGeometry = new THREE.CubeGeometry(100, 100, 100);
+        var cubeMaterial = new THREE.MeshLambertMaterial({
+            color: "green" ,wireframe:true
+        });
+        var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+        scene.add(cube);
+
+        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
+        camera.position.set(160,160,200);
+        camera.lookAt(cube.position);
+        scene.add(camera);
+
+        cameraControl = new THREE.OrbitControls(camera,renderer.domElement);
+
+
+        control = new function() {
+            this.rotationSpeed = 0.005;
+            this.opacity = 0.6;
+            this.color = cubeMaterial.color.getHex();
+        };
+        addControlGui(control);
+
+        function addControlGui(controlObject) {
+            var gui = new dat.GUI();
+            gui.add(controlObject, 'rotationSpeed', -0.01, 0.01);
+            gui.add(controlObject, 'opacity', 0.1, 1);
+            gui.addColor(controlObject, 'color');
+        }
+
+        var pointLight = new THREE.PointLight(0xffffff);
+        pointLight.position.set(300, 300, 300);
+        scene.add(pointLight);
+
+
+        function render() {
+            requestAnimationFrame(render);
+            cube.rotation.y += 0.01
+            cube.rotation.x += 0.01
+            renderer.render(scene, camera);
+        }
+        render();
+    </script>
+</body>
+
+</html>
